@@ -213,8 +213,6 @@ INSERT INTO ticket (id_veiculo, id_patio, data_entrada, data_saida, valor) VALUE
 (1, 6, "2021/11/18 12:00:00", "2021/11/18 13:00:00", 10.50),
 (2, 5, "2021/05/11 19:00:00", "2021/05/11 22:00:00", 30);
 
-insert into ticket (id_veiculo, id_patio, data_entrada, data_saida, valor) VALUES (1, 6, "2021/11/18 12:00:00", "2021/11/18 13:00:00", 16);
-
 /*		FIM QUESTÃO 2		*/
 
 /*		INICIO QUESTÃO 3		*/
@@ -308,7 +306,7 @@ REVOKE INSERT, DELETE ON estacione_aqui.patio FROM 'Fausto da Silveira'@'localho
 /*		INICIO QUESTÃO 6		*/
 
 /*		QUESTÃO 6.1		*/
-SELECT veiculo.placa, cliente.nome FROM veiculo INNER JOIN cliente ON veiculo.id_cliente = cliente.id;
+SELECT veiculo.placa AS Placa, cliente.nome AS Nome FROM veiculo INNER JOIN cliente ON veiculo.id_cliente = cliente.id;
 
 /*		QUESTÃO 6.2		*/
 SELECT COUNT(ticket.id_patio) AS qtd_tickets_SC FROM (((ticket
@@ -317,6 +315,50 @@ SELECT COUNT(ticket.id_patio) AS qtd_tickets_SC FROM (((ticket
             INNER JOIN estado ON cidade.id_estado = estado.id)
 			WHERE uf="SC";
 
+/*		QUESTÃO 6.3		*/
+SELECT veiculo.placa, veiculo.cor, veiculo.ano, modelo.descricao FROM veiculo  
+			INNER JOIN modelo ON veiculo.id_modelo = modelo.id
+			WHERE ano >= 2010;
+
+/*		QUESTÃO 6.4		*/
+SELECT cliente.cpf FROM ((cliente
+			INNER JOIN veiculo ON veiculo.id_cliente = cliente.id)
+            INNER JOIN modelo ON modelo.id = veiculo.id_modelo)
+            WHERE modelo.descricao  LIKE '%Fiat%';
+			
+/*		QUESTÃO 6.5		*/
+SELECT cliente.nome AS Nome, ticket.data_entrada AS Entrada, ticket.data_saida AS Saida FROM ((ticket
+			INNER JOIN veiculo ON veiculo.id = ticket.id_veiculo)
+            INNER JOIN cliente ON cliente.id = veiculo.id_cliente)
+			WHERE DATE_ADD(ticket.data_entrada, interval 3 hour) > ticket.data_saida
+            ORDER BY cliente.nome ASC;
+ 
+/*		QUESTÃO 6.6		*/
+SELECT SUM(ticket.valor) AS ValorGasto, cliente.nome AS Nome  FROM ((cliente
+			INNER JOIN veiculo ON veiculo.id_cliente = cliente.id)
+            INNER JOIN ticket ON ticket.id_veiculo = veiculo.id)
+			GROUP BY Nome
+            ORDER BY ValorGasto DESC, Nome ASC;
+            
+/*		QUESTÃO 6.7		*/
+SELECT veiculo.placa AS Placa, cliente.nome AS NomeCliente, modelo.descricao AS DescricaoModelo FROM ((cliente
+			INNER JOIN veiculo ON veiculo.id_cliente = cliente.id)
+            INNER JOIN modelo ON modelo.id = veiculo.id_modelo)
+			ORDER BY Placa ASC;
+            
+/*		QUESTÃO 6.8		*/
+SELECT veiculo.placa AS Placa, ticket.data_entrada AS Entrada, ticket.data_saida AS Saida FROM ticket
+			INNER JOIN veiculo ON veiculo.id = ticket.id_veiculo
+            WHERE veiculo.cor = 'Azul';
+
+/*		QUESTÃO 6.9		*/ 
+SELECT  veiculo.id AS Veiculo, ticket.id_patio FROM veiculo
+			INNER JOIN ticket ON ticket.id_veiculo = veiculo.id
+			UNION
+			SELECT id_veiculo, id_patio FROM ticket;
+
+            
+            
 /*		FIM QUESTÃO 6		*/
 
 
