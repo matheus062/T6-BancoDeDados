@@ -8,6 +8,20 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
+/*
+
+		TRABALHO 6
+Alunos: Matheus Silvestre
+		Mateus Ries
+ Curso: Ciências da computação
+ Professor: Lucas Debatin
+ 
+*/
+-- -----------------------------------------------------
+
+
+
+-- -----------------------------------------------------
 -- Schema estacione_aqui
 -- -----------------------------------------------------
 
@@ -352,13 +366,19 @@ SELECT veiculo.placa AS Placa, ticket.data_entrada AS Entrada, ticket.data_saida
             WHERE veiculo.cor = 'Azul';
 
 /*		QUESTÃO 6.9		*/ 
-SELECT  veiculo.id AS Veiculo, ticket.id_patio FROM veiculo
+SELECT veiculo.id AS Veiculo, COUNT(DISTINCT ticket.id_patio) AS QTD_Patio FROM veiculo
 			INNER JOIN ticket ON ticket.id_veiculo = veiculo.id
-			UNION
-			SELECT id_veiculo, id_patio FROM ticket;
+            GROUP BY Veiculo;
 
-            
-            
+/*		QUESTÃO 6.10		*/ 
+SELECT cliente.nome AS NomeCliente, COUNT(modelo.descricao) AS QTD, modelo.descricao AS NomeVeiculo FROM cliente
+			INNER JOIN veiculo ON veiculo.id_cliente = cliente.id
+            INNER JOIN modelo ON veiculo.id_modelo = modelo.id
+            INNER JOIN ticket ON veiculo.id = ticket.id_veiculo
+            GROUP BY modelo.descricao
+            ORDER BY QTD DESC
+            LIMIT 0,1;
+ 
 /*		FIM QUESTÃO 6		*/
 
 
